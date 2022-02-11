@@ -1,6 +1,5 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-
 import Notiflix from 'notiflix';
 
 
@@ -10,6 +9,7 @@ const daysSpanRef = document.querySelector(`[data-days]`);
 const hoursSpanRef = document.querySelector(`[data-hours]`);
 const minutesSpanRef = document.querySelector(`[data-minutes]`);
 const secondsSpanRef = document.querySelector(`[data-seconds]`);
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -29,17 +29,14 @@ function onInput() {
 
    targetDate = myInput.value;
    let date = new Date(targetDate);
-   msTargetDate = date.getTime();
-   const delta = msTargetDate - Date.now();
+   const delta = date.getTime() - Date.now();
 
    if (delta < 0) {
        Notiflix.Notify.failure('Please choose a date in the future');
        return;
    } else {
        btnStart.disabled = false;
-
    }
-
   return  msTargetDate = date.getTime();
 }
 
