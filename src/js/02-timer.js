@@ -2,8 +2,8 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import Notiflix from 'notiflix';
 
-
-const myInput = document.querySelector("input#datetime-picker");
+const pRef = document.querySelector('p');
+const myInput = document.querySelector("#datetime-picker");
 const btnStart = document.querySelector('[data-start]');
 const daysSpanRef = document.querySelector(`[data-days]`);
 const hoursSpanRef = document.querySelector(`[data-hours]`);
@@ -24,6 +24,7 @@ let targetDate = null;
 let msTargetDate = null;
 btnStart.disabled = true;
 
+wrapper();
 
 function onInput() {
 
@@ -66,36 +67,45 @@ function addLeadingZero(value) {
  return String(value).padStart(2, 0);
 }
 
-function CountdownTimer() {
+function countdownTimer() {
 
-    setInterval(() => {
+  const intervalId = setInterval(() => {
        const currentTime = Date.now();
        const delta = msTargetDate - currentTime;
-       if (delta < 0) {
-           return;
-       }
-       const { days, hours, minutes, seconds } = convertMs(delta);
-       daysSpanRef.textContent = days;
-    //    hoursSpanRef.textContent = String(hours).padStart(2, 0);
-       hoursSpanRef.textContent = addLeadingZero(hours);
-    //    minutesSpanRef.textContent = String(minutes).padStart(2, 0);
-       minutesSpanRef.textContent = addLeadingZero(minutes);
-    //    secondsSpanRef.textContent = String(seconds).padStart(2, 0);
-       secondsSpanRef.textContent = addLeadingZero(seconds);
+    if (delta < 0) {
+      clearInterval(intervalId);
+      countdownValues(convertMs(0));
+      return;
+    }
+      countdownValues(convertMs(delta));
    }, 1000);
-}
+};
 
+function countdownValues({ days, hours, minutes, seconds }) {
+  daysSpanRef.textContent = days;
+  hoursSpanRef.textContent = addLeadingZero(hours);
+  minutesSpanRef.textContent = addLeadingZero(minutes);
+  secondsSpanRef.textContent = addLeadingZero(seconds);
+}
 
 function onClick() {
     btnStart.disabled = true;
     myInput.disabled = true;
-    CountdownTimer();
+    countdownTimer();
 }
 
 
 btnStart.addEventListener('click', onClick);
 
 
+function wrapper() {
+
+  const wrapper = document.createElement("div");
+  wrapper.classList.add('wrapper');
+  pRef.after(wrapper);
+  wrapper.appendChild(myInput);
+  wrapper.appendChild(btnStart);
+}
 
 
 
